@@ -24,13 +24,39 @@ async def main():
                            })
 
     page = await browser.newPage() # 開啟新分頁
-    
-    # 改變視窗大小
     await page.setViewport(viewport={'width': width, 'height': height})
-    await page.goto('https://www.google.com/',timeout=9000)
-    html = await page.content() # 調用頁面 html content
-    soup = BeautifulSoup(html,'html.parser')
-    print(soup)
+    await page.goto('https://www.scbeasy.com/v1.4/site/presignon/index_en.asp',timeout=6000)
+    
+    # 登入
+    await page.type('#LOGIN', "scbsupanya")
+    await page.type('#LogIn > table > tbody > tr:nth-child(3) > td > label > input', "Okay111**")
+    
+    await page.waitForXPath('//*[@id="lgin"]', timeout=15000) # check login the element is appear
+    await asyncio.sleep(3)
+    await page.click('#lgin')
+    await page.waitForXPath('//*[@id="Img3"]', timeout=15000) # check the buttum is appear that into transfer web page
+    await asyncio.sleep(5)
+    await page.click('#Img3')
+    
+    # 確認進入頁面再存 cookies
+    await page.waitForXPath('//*[@id="DataProcess_Header_Image"]', timeout=15000)
+    
+    await asyncio.sleep(5)
+    # into transfer flow
+    await page.click('#ctl15_AnotherBankAccount_LinkButton') # click Another Bank Account buttum
+    await page.waitForXPath('//*[@id="DataProcess_lbtnNoProfile"]', timeout=15000) # wait "Click here for other account" string
+    await asyncio.sleep(5)
+    await page.click('#DataProcess_lbtnNoProfile')
+    await asyncio.sleep(5)
+    
+    # typing tansfer bank information
+    await page.waitForXPath('//*[@id="DataProcess_lbtnViewAccBal"]', timeout=15000)
+    await page.evaluate("() => { document.querySelector('#DataProcess_ddlCustBank').selectedIndex=1 }")
+    await page.type('#DataProcess_txtCustReceiveAccount', "2240371738")
+    await page.type('#DataProcess_txtCustAmount', "20")
+    
+    await page.waitForXPath('//*[@id="nxt"]', timeout=15000) # check the sumbit buttum is appear
+    await page.click('#nxt') # into receive verify code web page
 
 
 # 可供外部調用執行
