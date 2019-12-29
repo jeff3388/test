@@ -1,5 +1,6 @@
 #!pip install nest_asyncio
 #!pip install twint
+from pyvirtualdisplay import Display
 from pyppeteer import launch
 from xvfbwrapper import Xvfb
 import asyncio
@@ -34,9 +35,9 @@ def main_function():
     loop.run_until_complete(main())
 
 
-vdisplay = Xvfb()
-vdisplay.start()
+display = Display(visible=0, size=(900, 800))
+display.start()
 
 main_function()
 
-vdisplay.stop()
+display.stop()
