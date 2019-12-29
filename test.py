@@ -1,8 +1,8 @@
 #!pip install nest_asyncio
 #!pip install twint
-from pyvirtualdisplay import Display
+
+from bs4 import BeautifulSoup
 from pyppeteer import launch
-from xvfbwrapper import Xvfb
 import asyncio
 
 loop = asyncio.get_event_loop() # 需先宣告好
@@ -27,17 +27,14 @@ async def main():
     
     # 改變視窗大小
     await page.setViewport(viewport={'width': width, 'height': height})
-    await page.goto('https://www.google.com/',timeout=3000)
+    await page.goto('https://www.google.com/',timeout=9000)
+    html = await page.content() # 調用頁面 html content
+    soup = BeautifulSoup(html,'html.parser')
+    print(soup)
 
 
 # 可供外部調用執行
 def main_function():
     loop.run_until_complete(main())
 
-
-display = Display(visible=0, size=(900, 800))
-display.start()
-
 main_function()
-
-display.stop()
